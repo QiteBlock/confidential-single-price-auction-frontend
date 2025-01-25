@@ -1,0 +1,163 @@
+.auction-card {
+  background: #1a1a1a;
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: transform 0.2s;
+  border: 1px solid #333;
+}
+
+.auction-card:hover {
+  transform: translateY(-2px);
+}
+
+.auction-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.auction-card__status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  text-transform: capitalize;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.status-dot--active {
+  background: #22c55e;
+}
+
+.status-dot--ended {
+  background: #ef4444;
+}
+
+.auction-card__favorite {
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+.auction-card__favorite svg {
+  width: 20px;
+  height: 20px;
+}
+
+.auction-card__content {
+  margin-bottom: 1.5rem;
+}
+
+.auction-card__info h3 {
+  font-size: 0.875rem;
+  color: #666;
+  margin-bottom: 0.25rem;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.info-label {
+  font-size: 0.875rem;
+  color: #666;
+}
+
+.info-value {
+  font-size: 0.875rem;
+  color: #fff;
+}
+
+.info-value.address {
+  font-family: monospace;
+  background: #242424;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.auction-card__stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.stat__label {
+  font-size: 0.75rem;
+  color: #666;
+}
+
+.stat__value {
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.auction-card__dates {
+  margin: 1rem 0;
+  background: #242424;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.date-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.date-row:last-child {
+  margin-bottom: 0;
+}
+
+.date-label {
+  font-size: 0.875rem;
+  color: #666;
+}
+
+.date-value {
+  font-size: 0.875rem;
+  color: #fff;
+}
+
+.auction-card__footer {
+  margin-top: 1.5rem;
+}
+
+.auction-card__participate {
+  width: 100%;
+  background: #646cff;
+  color: white;
+  border: none;
+  padding: 0.75rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.auction-card__participate:hover:not(:disabled) {
+  background: #747bff;
+}
+
+.auction-card__participate:disabled {
+  background: #4b4b4b;
+  cursor: not-allowed;
+}

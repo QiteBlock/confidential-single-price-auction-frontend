@@ -63,9 +63,10 @@ export const Connect: React.FC<{
         refreshAccounts(accounts);
         await refreshNetwork();
       })
-      .catch(() => {
-        // Do nothing
+      .catch((err) => {
+        console.error('Error checking accounts:', err);
       });
+
     eth.on('accountsChanged', refreshAccounts);
     eth.on('chainChanged', refreshNetwork);
   }, []);
@@ -74,14 +75,18 @@ export const Connect: React.FC<{
     if (!provider) {
       return;
     }
-    const accounts: string[] = await provider.send('eth_requestAccounts', []);
+    try {
+      const accounts: string[] = await provider.send('eth_requestAccounts', []);
 
-    if (accounts.length > 0) {
-      setAccount(accounts[0]);
-      setConnected(true);
-      if (!(await hasValidNetwork())) {
-        await switchNetwork();
+      if (accounts.length > 0) {
+        setAccount(accounts[0]);
+        setConnected(true);
+        if (!(await hasValidNetwork())) {
+          await switchNetwork();
+        }
       }
+    } catch (error) {
+      console.error('Error connecting wallet:', error);
     }
   };
 
@@ -113,7 +118,7 @@ export const Connect: React.FC<{
     }
 
     if (loading) {
-      return <p>Loading...</p>;
+      return <p>Loading ...</p>;
     }
 
     return children(account, provider);

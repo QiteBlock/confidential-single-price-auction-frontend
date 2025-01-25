@@ -1,0 +1,54 @@
+.Devnet__dd {
+  margin: 0;
+}
+
+.Devnet__pre {
+  white-space: break-spaces;
+  word-wrap: break-word;
+}
+
+.Devnet__title {
+  font-weight: bold;
+}
+
+.auctions {
+  padding: 2rem;
+  max-width: 90vw;
+  margin: 0 auto;
+}
+
+.auctions__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.create-button {
+  background: #646cff;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.create-button:hover {
+  background: #747bff;
+}
+
+.auctions__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.auctions__loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+}

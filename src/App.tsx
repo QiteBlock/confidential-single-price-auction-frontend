@@ -1,14 +1,16 @@
-import { useEffect, useState } from 'react';
-import { Devnet } from './components/Devnet';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Auctions } from './components/Auctions';
+import { AuctionDetails } from './components/AuctionDetails';
+import { Header } from './components/Header/Header';
 import { init } from './fhevmjs';
 import './App.css';
 import { Connect } from './components/Connect';
+import { useEffect, useState } from 'react';
 
 function App() {
   const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
-    // Trick to avoid double init with HMR
     if (window.fhevmjsInitialized) return;
     window.fhevmjsInitialized = true;
     init()
@@ -24,19 +26,29 @@ function App() {
   if (!isInitialized) return null;
 
   return (
-    <>
-      <h1>fhevmjs</h1>
-      <Connect>
-        {(account, provider) => (
-          <Devnet account={account} provider={provider} />
-        )}
-      </Connect>
-      <p className="read-the-docs">
-        <a href="https://docs.zama.ai/fhevm">
-          See the documentation for more information
-        </a>
-      </p>
-    </>
+    <Router>
+      <div className="app">
+        <Header />
+        <main className="app-content">
+          <Connect>
+            {(account, provider) => (
+              <Routes>
+                <Route
+                  path="/"
+                  element={<Auctions account={account} provider={provider} />}
+                />
+                <Route
+                  path="/auction/:id"
+                  element={
+                    <AuctionDetails account={account} provider={provider} />
+                  }
+                />
+              </Routes>
+            )}
+          </Connect>
+        </main>
+      </div>
+    </Router>
   );
 }
 

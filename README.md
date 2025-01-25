@@ -1,8 +1,43 @@
-# fhevmjs-react-template
+# Confidential Single-Price Auction Frontend - Shadow Bid
 
-This is a simple template to show how to use fhevmjs with Vite + React.
+A React-based decentralized application (dApp) demonstrating private auctions using Fully Homomorphic Encryption (FHE) on the FHEVM blockchain.
 
-## Getting started
+## Overview
+
+This project showcases how to build privacy-preserving auctions where bids remain encrypted until the auction ends. Built with fhevmjs, React, and Vite, it demonstrates:
+
+- Creating and managing private auctions
+- Placing encrypted bids
+- Locking funds for auction participation
+- Settling auctions and revealing bids
+- Supporting both ETH and ERC20 tokens for payments
+
+## Features
+
+- **Auction Creation**: Create auctions with customizable parameters
+- **Encrypted Bidding**: Place bids that remain private until auction completion
+- **Fund Management**: Lock and manage funds for auction participation
+- **Multi-Token Support**: Use ETH or ERC20 tokens for payments
+- **Real-time Status**: Track auction status, participants, and timing
+- **Bid Decryption**: Secure process for revealing bids after auction ends
+
+## Prerequisites
+
+- Node.js
+- npm or yarn
+- MetaMask or another Web3 wallet
+- Testnet ETH (for Sepolia network)
+
+## Installation
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/your-username/fhevmjs-react-template
+cd fhevmjs-react-template
+```
+
+2. Install dependencies:
 
 ```bash
 npm install
@@ -10,26 +45,87 @@ npm install
 
 ## Configuration
 
-Copy `.env.example` to `.env` and update the gateway URL, ACL address, and KMS address to match the fhEVM you're using.
+1. Copy the environment template:
+
+```bash
+cp .env.example .env
+```
+
+2. Update the `.env` file with your configuration:
+
+```
+VITE_GATEWAY_URL=your_gateway_url
+VITE_ACL_ADDRESS=your_acl_address
+VITE_KMS_ADDRESS=your_kms_address
+VITE_AUCTION_FACTORY_CONTRACT_ADDRESS=your_auction_factory_address
+```
 
 ## Development
+
+Start the development server:
 
 ```bash
 npm run dev
 ```
 
-The server listens on [http://localhost:5173/](http://localhost:5173/)
+The application will be available at [http://localhost:5173/](http://localhost:5173/)
 
-## Build
+## Testing
+
+### Using Sepolia Testnet
+
+For testing with the actual FHEVM:
+
+1. Configure your `.env` for Sepolia
+2. Ensure you have Sepolia testnet ETH
+3. Connect your wallet to Sepolia network
+
+## Key Components
+
+- **AuctionDetails**: Manages individual auction interactions
+- **Auctions**: Displays auction listings and creation
+- **AuctionCard**: Renders auction information cards
+- **AuctionModal**: Handles auction creation interface
+
+## Building for Production
 
 ```bash
 npm run build
 ```
 
-## Using the mocked coprocessor for front end
+## Resources
 
-As an alternative to use the real coprocessor deployed on Sepolia, to help you develop your dApp faster and without needing testnet tokens, you can use a mocked fhevm. Currently, we recommend you to use the `ConfidentialERC20` dApp example available on the [`mockedFrontend` branch of this repository](https://github.com/zama-ai/fhevm-react-template/tree/mockedFrontend). Follow the README on this branch, and you will be able to deploy exactly the same dApp both on Sepolia as well as on the mocked coprocessor seamlessly.
+- [fhevmjs Documentation](https://docs.zama.ai/fhevm)
+- [Zama Documentation](https://docs.zama.ai)
+- [React Documentation](https://reactjs.org/)
+- [Vite Documentation](https://vitejs.dev/)
 
-## Documentation
+## Screenshots
 
-For more information about fhevmjs, you can [read the documentation](https://docs.zama.ai/fhevm).
+- List of auctions page
+
+![Auctions](./screenshots/auctions.png)
+
+- Auction details page / lock funds or place bid
+
+![Auction details page 1](./screenshots/lock-place-bids.png)
+
+- Auction details page / locked funds and my bids
+
+![Auction details page 2](./screenshots/locked-my-bid.png)
+
+- Auction details page / encrypted bids
+
+![Auction details page 3](./screenshots/current-encrypted.png)
+
+- Auction details page / decrypted bids
+
+![Auction details page 4](./screenshots/settlement-price-decrypted-bid.png)
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is licensed under the GPL-3.0 License. See the LICENSE file for details.

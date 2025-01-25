@@ -7,7 +7,7 @@ import {
   storePublicParams,
 } from './fhevmStorage';
 
-const ACL_ADDRESS: string = import.meta.env.VITE_ACL_ADDRESS;
+const VITE_ACL_ADDRESS: string = import.meta.env.VITE_ACL_ADDRESS;
 
 export type Keypair = {
   publicKey: string;
@@ -30,10 +30,10 @@ const keypairs: Keypairs = {};
 
 export const createFhevmInstance = async () => {
   if (instancePromise) return instancePromise;
-  const storedPublicKey = await getPublicKey(ACL_ADDRESS);
+  const storedPublicKey = await getPublicKey(VITE_ACL_ADDRESS);
   const publicKey = storedPublicKey?.publicKey;
   const publicKeyId = storedPublicKey?.publicKeyId;
-  const storedPublicParams = await getPublicParams(ACL_ADDRESS);
+  const storedPublicParams = await getPublicParams(VITE_ACL_ADDRESS);
   const publicParams = storedPublicParams
     ? {
         '2048': storedPublicParams,
@@ -41,7 +41,7 @@ export const createFhevmInstance = async () => {
     : null;
   instancePromise = createInstance({
     network: window.ethereum,
-    aclContractAddress: ACL_ADDRESS,
+    aclContractAddress: VITE_ACL_ADDRESS,
     kmsContractAddress: import.meta.env.VITE_KMS_ADDRESS,
     gatewayUrl: import.meta.env.VITE_GATEWAY_URL,
     publicKey,
@@ -51,11 +51,11 @@ export const createFhevmInstance = async () => {
   instance = await instancePromise;
   const pp = instance.getPublicParams(2048);
   if (pp) {
-    await storePublicParams(ACL_ADDRESS, pp);
+    await storePublicParams(VITE_ACL_ADDRESS, pp);
   }
   const pk = instance.getPublicKey();
   if (pk) {
-    await storePublicKey(ACL_ADDRESS, pk);
+    await storePublicKey(VITE_ACL_ADDRESS, pk);
   }
 };
 
