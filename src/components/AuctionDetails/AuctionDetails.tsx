@@ -30,6 +30,9 @@ const AUCTION_ABI = [
   'function settleAuction() public',
   'function settlementPrice() public view returns (uint256)',
   'function asset() view returns (address)',
+  'function settled() public view returns (bool)',
+  'function distributeFunds() public',
+  'function getFinalWinners() public view returns (tuple(address bidder, uint256 quantity, uint256 price)[])',
 ];
 
 const ERC20_ABI = [
@@ -73,6 +76,8 @@ export const AuctionDetails = ({ account }: AuctionsProps) => {
     BigInt(0),
   );
   const [assetToken, setAssetToken] = useState<string>('');
+  const [settled, setSettled] = useState(false);
+  const [winners, setWinners] = useState<DecryptedBid[]>([]);
 
   useEffect(() => {
     const loadAuctionData = async () => {
@@ -99,6 +104,10 @@ export const AuctionDetails = ({ account }: AuctionsProps) => {
         const status = await auctionContract.isActive();
         setAuctionStatus(status ? 'active' : 'ended');
 
+        // Get auction settled status
+        const settledStatus = await auctionContract.settled();
+        setSettled(settledStatus);
+
         // If not owner, get user-specific data
         if (!isOwner) {
           const lockedAmt = await auctionContract.lockedFunds(account);
@@ -116,11 +125,14 @@ export const AuctionDetails = ({ account }: AuctionsProps) => {
           setBids(decryptedBids);
         }
         await handleGetAllDecryptedBids();
+        await handleGetWinners();
         const settlementPrice = await auctionContract.settlementPrice();
         setSettlementPrice(settlementPrice);
       } catch (error) {
         console.error('Error loading auction data:', error);
       }
+      console.log('assetToken', assetToken);
+      console.log('paymentToken', paymentToken);
       setMyAssetTokenBalance(await getTokenBalance(assetToken));
       const ethersProvider = new ethers.BrowserProvider(window.ethereum!);
       setMyPaymentTokenBalance(
@@ -310,6 +322,20 @@ export const AuctionDetails = ({ account }: AuctionsProps) => {
     }
   };
 
+  const handleDistributeFunds = async () => {
+    console.log('Distributing funds');
+    try {
+      const ethersProvider = new ethers.BrowserProvider(window.ethereum!);
+      const signer = await ethersProvider.getSigner();
+      const auctionContract = new ethers.Contract(id!, AUCTION_ABI, signer);
+      await auctionContract.distributeFunds();
+      alert('Funds distributed successfully!');
+    } catch (error) {
+      console.error('Error distributing funds:', error);
+      alert('Error distributing funds, please check console for error!');
+    }
+  };
+
   const handleGetAllDecryptedBids = async () => {
     try {
       const ethersProvider = new ethers.BrowserProvider(window.ethereum!);
@@ -319,6 +345,19 @@ export const AuctionDetails = ({ account }: AuctionsProps) => {
       console.log('decryptedBids', decryptedBids);
       setDecryptedBids(decryptedBids);
       getMyDecryptedBid(decryptedBids);
+    } catch (error) {
+      console.error('Error getting decrypted bids:', error);
+    }
+  };
+
+  const handleGetWinners = async () => {
+    try {
+      const ethersProvider = new ethers.BrowserProvider(window.ethereum!);
+      const signer = await ethersProvider.getSigner();
+      const auctionContract = new ethers.Contract(id!, AUCTION_ABI, signer);
+      const finalWinners = await auctionContract.getFinalWinners();
+      console.log('finalWinners', finalWinners);
+      setWinners(finalWinners);
     } catch (error) {
       console.error('Error getting decrypted bids:', error);
     }
@@ -338,11 +377,20 @@ export const AuctionDetails = ({ account }: AuctionsProps) => {
     <div className="auction-details">
       <h2>Auction Details</h2>
 
-      {auctionStatus === 'ended' && (
+      {isOwner && auctionStatus === 'ended' && (
         <button className="decrypt-button" onClick={handleGetAllDecryptedBids}>
           Get All Decrypted Bids
         </button>
       )}
+
+      {isOwner &&
+        auctionStatus === 'ended' &&
+        decryptedBids.length > 0 &&
+        settled && (
+          <button className="decrypt-button" onClick={handleGetWinners}>
+            Get Auction Winners
+          </button>
+        )}
 
       {isOwner && (
         <div className="info-card">
@@ -354,8 +402,17 @@ export const AuctionDetails = ({ account }: AuctionsProps) => {
             {ethers.formatEther(myPaymentTokenBalance)}{' '}
           </p>
           {auctionStatus === 'ended' && (
-            <button className="decrypt-button" onClick={handleSettleAuction}>
+            <button
+              className="decrypt-button"
+              onClick={handleSettleAuction}
+              disabled={settled}
+            >
               Settle Auction
+            </button>
+          )}
+          {settled && (
+            <button className="decrypt-button" onClick={handleDistributeFunds}>
+              Distribute Funds
             </button>
           )}
         </div>
@@ -365,6 +422,9 @@ export const AuctionDetails = ({ account }: AuctionsProps) => {
         <h3>Auction Status</h3>
         <p className={`status ${auctionStatus}`}>
           {auctionStatus === 'active' ? 'Active' : 'Inactive'}
+        </p>
+        <p className={`status ${settled ? 'settled' : 'not-settled'}`}>
+          {settled ? 'Settled' : 'Not Settled'}
         </p>
       </div>
 
@@ -417,7 +477,11 @@ export const AuctionDetails = ({ account }: AuctionsProps) => {
             <p>
               {ethers.formatEther(lockedAmount)}{' '}
               {paymentToken == ethers.ZeroAddress ? 'ETH' : 'Payment Token'}
-              {paymentToken == ethers.ZeroAddress ? '' : <p>{paymentToken}</p>}
+              {paymentToken == ethers.ZeroAddress ? (
+                ''
+              ) : (
+                <p>Token Address: {paymentToken}</p>
+              )}
             </p>
           </div>
           {auctionStatus === 'active'
@@ -484,6 +548,22 @@ export const AuctionDetails = ({ account }: AuctionsProps) => {
                   <p>Bidder: {bid.bidder}</p>
                   <p>Quantity: {ethers.formatEther(bid.quantity)}</p>
                   <p>Price: {ethers.formatEther(bid.price)}</p>
+                </div>
+              ))}
+          {settled && decryptedBids.length > 0 && <h3>Auction Winners</h3>}
+          {settled &&
+            decryptedBids.length > 0 &&
+            winners
+              .filter(
+                (bid) =>
+                  ethers.formatEther(bid.price) >=
+                  ethers.formatEther(settlementPrice),
+              )
+              .map((winner, index) => (
+                <div key={'winner' + index} className="bid-card">
+                  <p>Winner: {winner.bidder}</p>
+                  <p>Quantity: {ethers.formatEther(winner.quantity)}</p>
+                  <p>Price: {ethers.formatEther(winner.price)}</p>
                 </div>
               ))}
         </div>

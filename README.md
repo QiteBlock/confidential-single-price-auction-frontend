@@ -1,4 +1,4 @@
-# Confidential Single-Price Auction Frontend - Shadow Bid
+# Confidential Single-Price Auction Frontend - ShadowBid
 
 A React-based decentralized application (dApp) demonstrating private auctions using Fully Homomorphic Encryption (FHE) on the FHEVM blockchain.
 
@@ -11,6 +11,12 @@ This project showcases how to build privacy-preserving auctions where bids remai
 - Locking funds for auction participation
 - Settling auctions and revealing bids
 - Supporting both ETH and ERC20 tokens for payments
+
+## Live Demo
+
+Try out the live demo of ShadowBid at:
+
+[ShadowBid](https://shadow-bid-3fb46.web.app/)
 
 ## Features
 

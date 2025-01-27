@@ -8,7 +8,7 @@ export const Header = () => {
     <header className="app-header">
       <div className="header-content">
         <h1 onClick={() => navigate('/')} className="header-title">
-          Shadow Bid
+          ShadowBid
         </h1>
         <nav className="header-nav">
           <button className="nav-link" onClick={() => navigate('/')}>

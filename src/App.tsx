@@ -29,6 +29,7 @@ function App() {
     <Router>
       <div className="app">
         <Header />
+        <div className="app-slogan">Bid in shadows, win with glow</div>
         <main className="app-content">
           <Connect>
             {(account, provider) => (
