@@ -12,12 +12,6 @@ This project showcases how to build privacy-preserving auctions where bids remai
 - Settling auctions and revealing bids
 - Supporting both ETH and ERC20 tokens for payments
 
-## Live Demo
-
-Try out the live demo of ShadowBid at:
-
-[ShadowBid](https://shadow-bid-3fb46.web.app/)
-
 ## Features
 
 - **Auction Creation**: Create auctions with customizable parameters
